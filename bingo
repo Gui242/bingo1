@@ -1,0 +1,43 @@
+#include <iostream>
+#include <vector>
+#include <ctime>
+using namespace std;
+
+int main() {
+    srand(time(0));
+    vector<bool> v(101, false);
+    
+    while(true) {
+        // Mostra tabela
+        for(int i = 1; i <= 100; i++) {
+            if(v[i]) cout << " X ";
+            else if(i < 10) cout << "0" << i << " ";
+            else cout << i << " ";
+            if(i % 10 == 0) cout << endl;
+        }
+        
+        // Para se todos foram sorteados
+        int contador = 0;
+        for(int i = 1; i <= 100; i++) {
+            if(v[i]) contador++;
+        }
+        if(contador == 100) {
+            cout << "\nBINGO!\n";
+            break;
+        }
+        
+        cout << "\nENTER para sortear: ";
+        cin.get();
+        
+        // Sorteia
+        int n;
+        do {
+            n = rand() % 100 + 1;
+        } while(v[n]);
+        
+        v[n] = true;
+        cout << "Saiu: " << n << "\n\n";
+    }
+    
+    return 0;
+}
