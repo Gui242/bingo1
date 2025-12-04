@@ -3,40 +3,77 @@
 #include <ctime>
 using namespace std;
 
+#ifdef _WIN32
+    #include <windows.h>
+    #define CLEAR system("cls")
+    #define RESET_COLOR SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7)
+    #define GREEN_COLOR SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10)
+    #define RED_COLOR SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12)
+#else
+    #include <cstdlib>
+    #define CLEAR system("clear")
+    #define RESET_COLOR cout << "\033[0m"
+    #define GREEN_COLOR cout << "\033[32m"
+    #define RED_COLOR cout << "\033[31m"
+#endif
+
 int main() {
     srand(time(0));
-    vector<bool> v(101, false);
+    vector<bool> num(101, false);
     
     while(true) {
+        CLEAR; // Limpa a tela a cada rodada
+        
         // Mostra tabela
+        cout << "=== BINGO - NUMEROS SORTEADOS EM VERMELHO ===\n\n";
         for(int i = 1; i <= 100; i++) {
-            if(v[i]) cout << " X ";
-            else if(i < 10) cout << "0" << i << " ";
-            else cout << i << " ";
+            if(num[i]) {
+                RED_COLOR;  // Número sorteado em vermelho
+                if(i < 10) cout << "0" << i << " ";
+                else cout << i << " ";
+                RESET_COLOR;
+            } else {
+                GREEN_COLOR;  // Número não sorteado em verde
+                if(i < 10) cout << "0" << i << " ";
+                else cout << i << " ";
+                RESET_COLOR;
+            }
+            
             if(i % 10 == 0) cout << endl;
         }
         
         // Para se todos foram sorteados
         int contador = 0;
         for(int i = 1; i <= 100; i++) {
-            if(v[i]) contador++;
+            if(num[i]) contador++;
         }
         if(contador == 100) {
-            cout << "\nBINGO!\n";
+            cout << "\n\nBINGO! Todos os números foram sorteados!\n";
             break;
         }
         
-        cout << "\nENTER para sortear: ";
+        cout << "\n\nNumeros sorteados: " << contador << " de 100";
+        cout << "\nPressione ENTER para sortear o proximo numero: ";
         cin.get();
         
         // Sorteia
         int n;
         do {
             n = rand() % 100 + 1;
-        } while(v[n]);
+        } while(num[n]);
         
-        v[n] = true;
-        cout << "Saiu: " << n << "\n\n";
+        num[n] = true;
+        
+        // Mostra qual número foi sorteado antes de limpar a tela
+        CLEAR;
+        cout << "=== ULTIMO NUMERO SORTEADO ===\n\n";
+        cout << "NUMERO: ";
+        RED_COLOR;
+        if(n < 10) cout << "0" << n;
+        else cout << n;
+        RESET_COLOR;
+        cout << "\n\nPressione ENTER para continuar...";
+        cin.get();
     }
     
     return 0;
