@@ -1,0 +1,50 @@
+#include <fstream>
+#include <cstdlib>
+#include <ctime>
+#include <vector>
+#include <algorithm>
+
+int main() {
+    std::srand(std::time(0));
+    
+    // Quantidade de cartões a criar (mude este número)
+    int quantidade = 5;
+    
+    for(int i = 1; i <= quantidade; i++) {
+        // Cria ficheiro com nome diferente para cada cartão
+        std::string nome = "cartao" + std::to_string(i) + ".txt";
+        std::ofstream ficheiro(nome);
+        
+        if(ficheiro.is_open()) {
+            // Gera 24 números únicos (25 posições - 1 centro)
+            std::vector<int> numeros;
+            while(numeros.size() < 24) {
+                int n = std::rand() % 100 + 1;
+                if(std::find(numeros.begin(), numeros.end(), n) == numeros.end()) {
+                    numeros.push_back(n);
+                }
+            }
+            std::sort(numeros.begin(), numeros.end());
+            
+            int idx = 0;
+            
+            // Escreve cartão 5x5
+            for(int linha = 0; linha < 5; linha++) {
+                for(int coluna = 0; coluna < 5; coluna++) {
+                    if(linha == 2 && coluna == 2) {
+                        ficheiro << "** ";
+                    } else {
+                        if(numeros[idx] < 10) ficheiro << "0";
+                        ficheiro << numeros[idx] << " ";
+                        idx++;
+                    }
+                }
+                ficheiro << "\n";
+            }
+            
+            ficheiro.close();
+        }
+    }
+    
+    return 0;
+}
